@@ -291,6 +291,16 @@ class Bringer_Mobile_Menu {
         this.$overlay.on('click', function() {
             _self.$body.removeClass('show-menu');
         });
+        
+        jQuery('.menu-toggler-fix').on('click', function() {
+            _self.$body.toggleClass('show-menu');
+        });
+        this.$overlay.on('click', function() {
+            _self.$body.removeClass('show-menu');
+        });
+        
+        
+        
     }
 }
 
