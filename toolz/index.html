@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frith Hilton Song Portfolio Generator</title>
+</head>
+<body>
+  <!-- Container for Generated Portfolio List -->
+  <div id="portfolio-container"></div>
+
+  <script>
+    // Sample JSON data (replace with your own JSON)
+    const albumData = {
+  "id": 2,
+  "title": "Colourful Light",
+  "cover": "../images/albums/colourfullight.jpg",
+  "releaseDate": "January 18, 2023",
+  "paymentLink": "https://paystack.com/pay/colourfulllight",
+  "songs": [
+    { "track": 1, "title": "Conterminous", "id": 14, "muse": "taylorSwift", "about": "Song information will be displayed here when available." },
+    { "track": 2, "title": "Forever", "id": 15, "muse": "charlyCox", "about": "Song information will be displayed here when available." },
+    { "track": 3, "title": "Not on my mobile", "id": 16, "muse": "alissaViolet", "about": "Song information will be displayed here when available." },
+    { "track": 4, "title": "No prolix", "id": 17, "muse": "alissaViolet", "about": "Song information will be displayed here when available." },
+    { "track": 5, "title": "Clones", "id": 18, "muse": "taylorSwift", "about": "Song information will be displayed here when available." },
+    { "track": 6, "title": "Needle", "id": 19, "muse": "taylorSwift", "about": "Song information will be displayed here when available." },
+    { "track": 7, "title": "Gold pack", "id": 20, "muse": "carmellaRose", "about": "Song information will be displayed here when available." },
+    { "track": 8, "title": "Endorphin", "id": 21, "muse": "meredithMickelson", "about": "Song information will be displayed here when available." },
+    { "track": 9, "title": "Never what it means", "id": 22, "muse": "jessicaAndrea", "about": "Song information will be displayed here when available." },
+    { "track": 10, "title": "How you had me", "id": 23, "muse": "taylorSwift", "about": "Song information will be displayed here when available." },
+    { "track": 11, "title": "I won't say it", "id": 24, "muse": "dagny", "about": "Song information will be displayed here when available." },
+    { "track": 12, "title": "On you", "id": 25, "muse": "dagny", "about": "Song information will be displayed here when available." },
+    { "track": 13, "title": "Little girl", "id": 26, "muse": "taylorSwift", "about": "Song information will be displayed here when available." },
+    { "track": 14, "title": "Ogre", "id": 27, "muse": "taylorSwift", "about": "Song information will be displayed here when available." },
+    { "track": 15, "title": "Living video record", "id": 28, "muse": "taylorSwift", "about": "Song information will be displayed here when available." },
+    { "track": 16, "title": "So long", "id": 29, "muse": "taylorSwift", "about": "Song information will be displayed here when available." },
+    { "track": 17, "title": "No telling", "id": 30, "muse": "taylorSwift", "about": "Song information will be displayed here when available." },
+    { "track": 18, "title": "Pepperoni freestyle", "id": 31, "muse": "taylorSwift", "about": "Song information will be displayed here when available." },
+    { "track": 19, "title": "May 1st", "id": 32, "muse": "jessicaAndrea", "about": "Song information will be displayed here when available." },
+    { "track": 20, "title": "Plunge (Interlude)", "id": 33, "muse": "jessicaAndrea", "about": "Song information will be displayed here when available." },
+    { "track": 21, "title": "Next to you", "id": 34, "muse": "taylorSwift", "about": "Song information will be displayed here when available." },
+    { "track": 22, "title": "Above", "id": 35, "muse": "taylorSwift", "about": "Song information will be displayed here when available." },
+    { "track": 23, "title": "Warden", "id": 36, "muse": "chantelJeffries", "about": "Song information will be displayed here when available." },
+    { "track": 24, "title": "Automatic", "id": 37, "muse": "taylorSwift", "about": "Song information will be displayed here when available." },
+    { "track": 25, "title": "Colourful light", "id": 38, "muse": "taylorSwift", "about": "Song information will be displayed here when available." },
+    { "track": 26, "title": "Gravity", "id": 39, "muse": "mariamRod", "about": "Song information will be displayed here when available." },
+    { "track": 27, "title": "Malady", "id": 40, "muse": "kimKardashian", "about": "Song information will be displayed here when available." },
+    { "track": 28, "title": "Broken ship", "id": 41, "muse": "taylorSwift", "about": "Song information will be displayed here when available." },
+    { "track": 29, "title": "Baby sways", "id": 42, "muse": "taylorSwift", "about": "Song information will be displayed here when available." },
+    { "track": 30, "title": "What she does", "id": 43, "muse": "taylorSwift", "about": "Song information will be displayed here when available." }
+  ]
+};
+
+    // Function to transform camelCase to title case (e.g., taylorSwift -> Taylor Swift)
+    function toTitleCase(str) {
+      return str
+        .replace(/([A-Z])/g, ' $1') // Add space before capital letters
+        .trim()
+        .replace(/\b\w/g, char => char.toUpperCase()); // Capitalise first letter of each word
+    }
+
+    // Function to generate portfolio list HTML from JSON
+    function generatePortfolioList(album) {
+      let html = `
+        <!-- Section: Portfolio List -->
+        <section>
+          <!-- Portfolio List -->
+          <div class="bringer-grid" data-stagger-appear="fade-right" data-threshold="0.5" data-stagger-delay="150" data-stagger-unload="fade-right">
+      `;
+
+      // Iterate through each song in the album
+      album.songs.forEach(song => {
+        const imageUrl = `https://www.frithhilton.com.ng/cover/${album.id}/${song.id}.jpg`;
+        const linkUrl = `https://www.frithhilton.com.ng/pages/freshPlayer.html?track=${song.id}`;
+        const museTitle = toTitleCase(song.muse);
+
+        html += `
+          <!-- Portfolio List Item: ${song.title} -->
+          <div class="bringer-block bringer-portfolio-short-item" data-appear="fade-right" data-delay="0">
+            <div class="bringer-portfolio-thmb">
+              <img class="bringer-lazy" src="img/null.png" data-src="${imageUrl}" alt="${song.title}" width="1200" height="1200">
+            </div>
+            <div class="bringer-portfolio-short-title">
+              <span class="bringer-meta">${museTitle}</span>
+              <h6>${song.title}</h6>
+            </div>
+            <span class="bringer-icon bringer-icon-explore"></span>
+            <a href="${linkUrl}" target="_blank"></a>
+          </div><!-- .bringer-portfolio-short-item -->
+        `;
+      });
+
+      html += `
+          </div><!-- .bringer-grid -->
+        </section>
+      `;
+
+      return html;
+    }
+
+    // Generate and insert the portfolio list into the DOM
+    const portfolioContainer = document.getElementById('portfolio-container');
+    portfolioContainer.innerHTML = generatePortfolioList(albumData);
+
+    // Log the generated HTML to the console for copying
+    console.log(generatePortfolioList(albumData));
+  </script>
+</body>
+</html>
