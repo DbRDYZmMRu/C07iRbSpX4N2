@@ -1,7 +1,7 @@
 /**
  * Author: Shadow Themes
  * Author URL: https://shadow-themes.com
- * Modified for Frith Nightswan Enterprises: Form validation, Google Forms submission, and robust error handling
+ * Modified for Frith Nightswan Enterprises: Form validation, Google Forms submission with fetch, and robust error handling
  */
 "use strict";
 
@@ -76,11 +76,11 @@ if (typeof jQuery === 'undefined') {
             const emailError = validateEmail(email);
             const messageError = validateMessage(message);
             
-            // Display validation errors and stop submission if any
+            // Display validation errors and stop submission
             if (nameError || emailError || messageError) {
               $response.addClass('bringer-alert-danger').slideDown(200);
               $response.html('<span>' + [nameError, emailError, messageError].filter(Boolean).join(' ') + '</span>');
-              return; // Stop here; do not proceed to AJAX
+              return; // Stop here; do not proceed to fetch
             }
             
             // Show loading spinner
@@ -88,29 +88,31 @@ if (typeof jQuery === 'undefined') {
             $spinner.show();
             
             // Prepare form data
-            const formData = $form.serialize();
+            const formData = new FormData($form[0]);
+            const urlEncodedData = new URLSearchParams(formData).toString();
             
-            // Send AJAX request
-            $.ajax({
-                type: 'POST',
-                url: $form.attr('action'),
-                data: formData,
-                dataType: 'text' // Google Forms returns text
+            // Send fetch request with no-cors
+            fetch($form.attr('action'), {
+                method: 'POST',
+                mode: 'no-cors', // Bypass CORS restrictions
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: urlEncodedData
               })
-              .done(function(response, textStatus, jqXHR) {
-                // Log full response
-                console.log('Form submission response:', {
-                  status: jqXHR.status,
-                  statusText: jqXHR.statusText,
-                  responseText: response || 'No response body (expected for Google Forms)',
-                  headers: jqXHR.getAllResponseHeaders()
+              .then(response => {
+                // Log request details (no-cors limits response data)
+                console.log('Form submission sent:', {
+                  url: $form.attr('action'),
+                  data: urlEncodedData,
+                  response: 'No response body due to no-cors mode'
                 });
                 
                 // Hide spinner
                 $form.removeClass('is-busy');
                 $spinner.hide();
                 
-                // Show success message
+                // Show success message (assume success since Google Forms accepts the request)
                 $response.empty().removeClass('bringer-alert-danger').addClass('bringer-alert-success').slideDown(200);
                 $response.html('<span>Thank you! Your message has been sent successfully.</span>');
                 $form.find('input:not([type="submit"]), textarea').val(''); // Clear form
@@ -122,26 +124,22 @@ if (typeof jQuery === 'undefined') {
                   });
                 }, 5000);
               })
-              .fail(function(jqXHR, textStatus, errorThrown) {
-                // Log full error
+              .catch(error => {
+                // Log error
                 console.log('Form submission error:', {
-                  status: jqXHR.status,
-                  statusText: jqXHR.statusText,
-                  responseText: jqXHR.responseText || 'No response body',
-                  errorThrown: errorThrown,
-                  headers: jqXHR.getAllResponseHeaders()
+                  error: error.message,
+                  url: $form.attr('action'),
+                  data: urlEncodedData
                 });
                 
                 // Hide spinner
                 $form.removeClass('is-busy');
                 $spinner.hide();
                 
-                // Handle errors
+                // Handle network errors
                 let errorMessage = 'An unexpected error occurred. Please try again later.';
-                if (!navigator.onLine || errorThrown === 'Network Error') {
+                if (!navigator.onLine || error.message.includes('network')) {
                   errorMessage = 'Network error: Unable to connect to the server. Please check your internet connection and try again.';
-                } else if (jqXHR.status) {
-                  errorMessage = `Submission failed: Server responded with status ${jqXHR.status}. Please try again later.`;
                 }
                 
                 // Show error message
