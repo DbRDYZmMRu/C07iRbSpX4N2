@@ -16,36 +16,21 @@
   <span class="bringer-form-spinner"></span>
 </form>
 
-<script>
-  document.getElementById('contact-form').addEventListener('submit', async function(event) {
-    event.preventDefault(); // Prevent default form submission
-    
-    const form = event.target;
-    const formData = new FormData(form);
-    const data = {
-      'entry.1892808031': formData.get('entry.1892808031'), // Name
-      'entry.1610053382': formData.get('entry.1610053382'), // Email
-      'entry.743431430': formData.get('entry.743431430'), // Message
-    };
-    
-    try {
-      const response = await fetch('https://docs.google.com/forms/u/0/d/e/1FAIpQLSfeY-NvqVdphxSbb8-nRz1w6tL0PKt7dUyrgEKn0k9OyaqfkQ/formResponse', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams(data).toString(),
-      });
-      
-      if (response.ok) {
-        document.querySelector('.bringer-contact-form__response').innerText = 'Form submitted successfully!';
-        form.reset();
-      } else {
-        document.querySelector('.bringer-contact-form__response').innerText = 'Error submitting form.';
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      document.querySelector('.bringer-contact-form__response').innerText = 'Error submitting form.';
-    }
-  });
-</script>
+To enhance the colors, I'll suggest some modifications. Since your background is `#07090D`, a dark, muted blue-black color, I'll recommend colors that provide good contrast and visual appeal.
+
+*Background:* `#07090D` (keep it as is)
+
+*Success Alert:* Instead of plain `green`, let's use a more vibrant and accessible color:
+`.bringer-alert-success { color: #34C759; }` (a bright, energetic green)
+
+*Danger Alert:* Instead of plain `red`, let's use a more attention-grabbing and slightly darker shade:
+`.bringer-alert-danger { color: #FF3737; }` (a bold, fire engine red)
+
+These colors should provide better contrast with your dark background and make your alerts more noticeable.
+
+If you'd like to further customize the colors, here are some additional suggestions:
+
+- *Success Alert (alternative):* `#8BC34A` (a softer, more muted green)
+- *Danger Alert (alternative):* `#FF6347` (a slightly more orange-toned red)
+
+Feel free to pick the colors that best fit your design preferences!

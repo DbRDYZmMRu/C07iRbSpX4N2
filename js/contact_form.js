@@ -11,6 +11,8 @@ if (typeof jQuery === 'undefined') {
 } else {
   jQuery(document).ready(function($) {
     function Bringer_Contact_Form() {
+      console.log('Bringer_Contact_Form initialized'); // Debug: Confirm initialization
+      
       // Form Fields: Focus/Blur Effects
       if ($('input[name]:not(.is-init), textarea[name]:not(.is-init)').length) {
         $('input[name]:not(.is-init), textarea[name]:not(.is-init)').each(function() {
@@ -33,9 +35,11 @@ if (typeof jQuery === 'undefined') {
           
           $response.slideUp(1);
           $form.addClass('is-init');
+          console.log('Form initialized:', $form.attr('id')); // Debug: Confirm form setup
           
-          $form.on('submit', function(e) {
+          $form.off('submit').on('submit', function(e) {
             e.preventDefault(); // Prevent page reload
+            console.log('Form submit event triggered'); // Debug: Confirm event
             
             // Clear previous response
             $response.empty().removeClass('bringer-alert-success bringer-alert-danger').slideUp(200);
@@ -44,6 +48,7 @@ if (typeof jQuery === 'undefined') {
             const name = $form.find('#name').val().trim();
             const email = $form.find('#email').val().trim();
             const message = $form.find('#message').val().trim();
+            console.log('Input values:', { name, email, message }); // Debug: Log inputs
             
             // Validation functions
             const validateName = (name) => {
@@ -75,17 +80,20 @@ if (typeof jQuery === 'undefined') {
             const nameError = validateName(name);
             const emailError = validateEmail(email);
             const messageError = validateMessage(message);
+            console.log('Validation results:', { nameError, emailError, messageError }); // Debug: Log validation
             
             // Display validation errors and stop submission
             if (nameError || emailError || messageError) {
               $response.addClass('bringer-alert-danger').slideDown(200);
               $response.html('<span>' + [nameError, emailError, messageError].filter(Boolean).join(' ') + '</span>');
+              console.log('Validation failed, submission aborted'); // Debug: Confirm no submission
               return; // Stop here; do not proceed to fetch
             }
             
             // Show loading spinner
             $form.addClass('is-busy');
             $spinner.show();
+            console.log('Validation passed, proceeding to submission'); // Debug: Confirm submission start
             
             // Prepare form data
             const formData = new FormData($form[0]);
@@ -112,7 +120,7 @@ if (typeof jQuery === 'undefined') {
                 $form.removeClass('is-busy');
                 $spinner.hide();
                 
-                // Show success message (assume success since Google Forms accepts the request)
+                // Show success message
                 $response.empty().removeClass('bringer-alert-danger').addClass('bringer-alert-success').slideDown(200);
                 $response.html('<span>Thank you! Your message has been sent successfully.</span>');
                 $form.find('input:not([type="submit"]), textarea').val(''); // Clear form

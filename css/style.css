@@ -4389,19 +4389,3 @@ button.pswp__button.bringer-pswp-next::after {
 
 
 
-.bringer-contact-form__response {
-    margin-top: 1rem;
-    font-size: 1rem;
-}
-.bringer-alert-success {
-    color: green;
-}
-.bringer-alert-danger {
-    color: red;
-}
-.bringer-form-spinner {
-    display: none;
-}
-.bringer-contact-form.is-busy .bringer-form-spinner {
-    display: block;
-}
