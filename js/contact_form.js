@@ -76,11 +76,11 @@ if (typeof jQuery === 'undefined') {
             const emailError = validateEmail(email);
             const messageError = validateMessage(message);
             
-            // Display validation errors
+            // Display validation errors and stop submission if any
             if (nameError || emailError || messageError) {
               $response.addClass('bringer-alert-danger').slideDown(200);
               $response.html('<span>' + [nameError, emailError, messageError].filter(Boolean).join(' ') + '</span>');
-              return;
+              return; // Stop here; do not proceed to AJAX
             }
             
             // Show loading spinner
