@@ -122,7 +122,7 @@ if (typeof jQuery === 'undefined') {
                 
                 // Show success message
                 $response.empty().removeClass('bringer-alert-danger').addClass('bringer-alert-success').slideDown(200);
-                $response.html('<span>Thank you! Your message has been sent successfully.</span>');
+                $response.html('<span>Thank you very much! Your message has been sent successfully.</span>');
                 $form.find('input:not([type="submit"]), textarea').val(''); // Clear form
                 
                 // Hide success message after 5 seconds
