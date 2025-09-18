@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Googlebot Detection Test Page</title>
+  <meta name="description" content="Test page to detect and log Googlebot user-agent during GSC Live Test.">
+  <meta name="robots" content="index,follow">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    #user-agent { font-weight: bold; color: blue; }
+    #is-bot { font-weight: bold; color: green; }
+    #log { border: 1px solid #ccc; padding: 10px; background: #f9f9f9; }
+  </style>
+</head>
+<body>
+  <h1>Googlebot Detection Test</h1>
+  <p>This page detects the user-agent string and checks if it's Googlebot. Use Google Search Console's URL Inspection Tool (Live Test) on this page's URL to simulate Googlebot and capture its details.</p>
+  <p><strong>User-Agent String:</strong> <span id="user-agent">Detecting...</span></p>
+  <p><strong>Is Googlebot?</strong> <span id="is-bot">Detecting...</span></p>
+  <p><strong>Server Log Simulation (for SSR):</strong> Check your console or server logs for 'User-Agent: [string]' when testing in GSC.</p>
+  <div id="log"></div>
+
+  <script>
+    // Client-side detection (for bots that execute JS, like Googlebot)
+    (function() {
+      const userAgent = navigator.userAgent;
+      const isGooglebot = /Googlebot/i.test(userAgent);
+
+      // Display user-agent
+      document.getElementById('user-agent').textContent = userAgent;
+      document.getElementById('is-bot').textContent = isGooglebot ? 'Yes' : 'No';
+
+      // Log to console (visible in DevTools or GSC rendered view)
+      console.log('Detected User-Agent:', userAgent);
+      console.log('Is Googlebot:', isGooglebot);
+
+      // Append to page log for visibility in GSC Live Test rendered output
+      const logDiv = document.getElementById('log');
+      logDiv.innerHTML = `
+        <p>Logged User-Agent: ${userAgent}</p>
+        <p>Is Googlebot: ${isGooglebot ? 'Yes' : 'No'}</p>
+        <p>Note: In your SSR Worker, check headers.get('user-agent') for '${userAgent}' and add to regex if needed.</p>
+      `;
+    })();
+  </script>
+
+  <p>Instructions:</p>
+  <ol>
+    <li>Host this as bot-test.html on your site (e.g., https://www.frithhilton.com.ng/bot-test.html).</li>
+    <li>In GSC, inspect the URL and click "Live Test."</li>
+    <li>View "Rendered page" to see the detected user-agent (e.g., "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.96 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)").</li>
+    <li>Update your SSR Worker's bot regex: const isBot = /Googlebot|Bingbot|...| [add patterns from test] /i.test(userAgent);</li>
+  </ol>
+</body>
+</html>
